@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GeneLab</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+}
+input,textarea{ user-select:text; }
+
+:root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#718096;
+
+    --blue:#2563eb;
+    --blue2:#4f46e5;
+    --blue-light:#eff6ff;
+
+    --green:#16a34a;
+    --green-bg:#ecfdf5;
+
+    --red:#dc2626;
+    --red-bg:#fef2f2;
+
+    --amber:#d97706;
+    --amber-bg:#fffbeb;
+
+    --purple:#7c3aed;
+    --purple-bg:#f5f3ff;
+
+    --border:#e5e7eb;
+}
+
+body.dark{
+    --bg:#0f172a;
+    --card:#172033;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+    --blue-light:#172554;
+    --green-bg:#052e16;
+    --red-bg:#3f0d0d;
+    --amber-bg:#3a2a05;
+    --purple-bg:#241b3f;
+    --border:#263247;
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,"Noto Sans Thai",sans-serif;
+    transition:.2s;
+}
+
+.app{
+    max-width:960px;
+    margin:auto;
+    padding:14px;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:15px;
+    background:linear-gradient(135deg,var(--blue),var(--blue2));
+    color:white;
+    font-size:25px;
+    box-shadow:0 7px 18px #2563eb35;
+}
+
+.brand h1{
+    margin:0;
+    font-size:24px;
+}
+
+.brand span{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.dark-btn{
+    width:43px;
+    height:43px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:var(--card);
+    color:var(--text);
+    font-size:20px;
+    flex-shrink:0;
+}
+
+/* MAIN TABS */
+
+.maintabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:6px;
+}
+
+.maintab{
+    flex:1;
+    padding:11px 8px;
+    text-align:center;
+    border:0;
+    border-radius:11px;
+    background:transparent;
+    color:var(--muted);
+    font-weight:bold;
+    font-size:14px;
+}
+
+.maintab.active{
+    background:linear-gradient(135deg,var(--blue),var(--blue2));
+    color:white;
+    box-shadow:0 6px 14px #2563eb30;
+}
+
+.panel{ display:none; }
+.panel.active{ display:block; }
+
+/* CARD */
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:14px;
+    box-shadow:0 5px 18px rgba(0,0,0,.04);
+    animation:show .25s ease;
+}
+
+@keyframes show{
+    from{ opacity:0; transform:translateY(5px); }
+    to{ opacity:1; transform:none; }
+}
+
+/* SECTION TITLE */
+
+.title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+}
+
+.number{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:var(--blue-light);
+    color:var(--blue);
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.title h2{
+    margin:0;
+    font-size:18px;
+    flex:1;
+}
+
+/* MODE SWITCH (sub tabs) */
+
+.modeswitch{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+}
+
+.mode-btn{
+    padding:9px 14px;
+    border:2px solid var(--border);
+    border-radius:12px;
+    background:var(--bg);
+    color:var(--text);
+    font-size:13px;
+    font-weight:bold;
+}
+
+.mode-btn.active{
+    border-color:var(--blue);
+    background:var(--blue-light);
+    color:var(--blue);
+}
+
+/* INPUT */
+
+.field{ margin-bottom:14px; }
+
+label{
+    display:block;
+    font-weight:bold;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.input-box{ position:relative; }
+
+input[type=text]{
+    width:100%;
+    padding:15px 45px 15px 15px;
+    border:2px solid var(--border);
+    border-radius:14px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+    font-size:21px;
+    font-family:monospace;
+    text-align:center;
+    letter-spacing:3px;
+    transition:.15s;
+}
+
+input[type=text]:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 4px #2563eb18;
+}
+
+select{
+    width:100%;
+    padding:14px 15px;
+    border:2px solid var(--border);
+    border-radius:14px;
+    background:var(--bg);
+    color:var(--text);
+    font-size:16px;
+    font-family:Arial,"Noto Sans Thai",sans-serif;
+    outline:none;
+}
+
+select:focus{ border-color:var(--blue); }
+
+.clear{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    width:28px;
+    height:28px;
+    border:0;
+    border-radius:50%;
+    background:#e5e7eb;
+    color:#555;
+    font-size:18px;
+}
+
+.examples{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:-4px;
+    margin-bottom:14px;
+}
+
+.example-chip{
+    padding:6px 12px;
+    border-radius:20px;
+    border:1px dashed var(--border);
+    background:transparent;
+    color:var(--muted);
+    font-size:12px;
+    font-family:monospace;
+}
+
+/* CROSS PREVIEW */
+
+.cross-preview{
+    margin:12px 0;
+    padding:15px;
+    border-radius:15px;
+    background:var(--blue-light);
+    text-align:center;
+}
+
+.cross-preview small{
+    display:block;
+    color:var(--muted);
+    margin-bottom:5px;
+}
+
+.cross-preview strong{
+    font-family:monospace;
+    font-size:24px;
+    color:var(--blue);
+}
+
+/* BUTTON */
+
+.analyze,.btn-primary{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:14px;
+    color:white;
+    background:linear-gradient(135deg,var(--blue),var(--blue2));
+    font-size:17px;
+    font-weight:bold;
+    box-shadow:0 8px 18px #2563eb30;
+}
+
+.analyze:active,.btn-primary:active{ transform:scale(.98); }
+
+.btn-row{ display:flex; gap:8px; margin-top:10px; }
+
+.btn-secondary{
+    flex:1;
+    padding:12px;
+    border:2px solid var(--border);
+    border-radius:13px;
+    background:var(--bg);
+    color:var(--text);
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* PAIRS */
+
+.pairs{ display:flex; flex-wrap:wrap; gap:8px; }
+
+.pair{
+    min-width:55px;
+    padding:10px 13px;
+    border-radius:11px;
+    text-align:center;
+    background:var(--blue-light);
+    color:var(--blue);
+    font-family:monospace;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* CROSS */
+
+.cross{
+    text-align:center;
+    margin:8px 0 15px;
+    font-family:monospace;
+    font-size:25px;
+    font-weight:bold;
+}
+
+.cross span{ color:var(--blue); }
+
+/* TABLE */
+
+.table-container{ overflow-x:auto; padding:4px; }
+
+table{ border-collapse:separate; border-spacing:5px; margin:auto; }
+
+th,td{
+    width:65px;
+    height:55px;
+    text-align:center;
+    border-radius:11px;
+    font-family:monospace;
+    font-size:18px;
+}
+
+th{ background:var(--blue-light); color:var(--blue); }
+
+td{ background:var(--bg); border:1px solid var(--border); font-weight:bold; }
+
+td.affected{ background:var(--red-bg); color:var(--red); }
+
+/* RESULT GRID */
+
+.grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
+
+.stat{ padding:14px; border-radius:14px; background:var(--bg); }
+
+.stat-label{ color:var(--muted); font-size:12px; }
+
+.stat-value{ margin-top:3px; font-size:21px; font-weight:bold; }
+
+/* GENOTYPE */
+
+.genotypes{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+    gap:8px;
+}
+
+.genotype{
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:var(--bg);
+    text-align:center;
+}
+
+.genotype b{ font-family:monospace; font-size:20px; }
+
+.genotype small{ display:block; color:var(--muted); margin-top:3px; }
+
+/* PHENOTYPE */
+
+.phenotype{
+    padding:15px;
+    border-radius:15px;
+    background:var(--green-bg);
+    border:1px solid #bbf7d0;
+}
+
+body.dark .phenotype{ background:#052e16; border-color:#166534; }
+
+.phenotype-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px solid #00000010;
+}
+
+.phenotype-row:last-child{ border-bottom:0; }
+
+.percent{ color:var(--green); font-weight:bold; }
+
+/* FORMULA */
+
+.formula{
+    background:#111827;
+    color:#e5e7eb;
+    border-radius:14px;
+    padding:16px;
+    font-family:monospace;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre;
+}
+
+.answer{
+    margin-top:12px;
+    padding:18px;
+    text-align:center;
+    border-radius:16px;
+    background:var(--green-bg);
+}
+
+.answer small{ color:var(--muted); }
+
+.answer strong{
+    display:block;
+    color:var(--green);
+    font-size:32px;
+    margin:3px 0;
+}
+
+/* ERROR */
+
+.error{
+    padding:14px;
+    border-radius:13px;
+    background:var(--red-bg);
+    color:var(--red);
+    font-weight:bold;
+}
+
+.info-box{
+    padding:14px;
+    border-radius:13px;
+    background:var(--amber-bg);
+    color:var(--amber);
+    font-size:13px;
+    line-height:1.6;
+    margin-bottom:14px;
+}
+
+/* HISTORY */
+
+.history-wrap{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.history-chip{
+    padding:7px 12px;
+    border-radius:20px;
+    background:var(--purple-bg);
+    color:var(--purple);
+    font-family:monospace;
+    font-size:12px;
+    border:1px solid transparent;
+}
+
+.history-empty{
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* PEDIGREE */
+
+.ped-toolbar{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+}
+
+.ped-btn{
+    padding:10px 13px;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    font-size:13px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.ped-btn.on{ border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
+.ped-btn.danger{ border-color:#fecaca; color:var(--red); }
+.ped-btn.danger:active{ background:var(--red-bg); }
+
+.ped-canvas-wrap{
+    border:2px dashed var(--border);
+    border-radius:16px;
+    overflow:auto;
+    background:
+        linear-gradient(var(--border) 1px,transparent 1px),
+        linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:24px 24px;
+    background-color:var(--bg);
+}
+
+svg{ display:block; touch-action:none; }
+
+.ped-hint{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:10px;
+    line-height:1.7;
+}
+
+.legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--border);
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:12px;
+    color:var(--muted);
+}
+
+.legend-swatch{
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+    border:2px solid var(--text);
+}
+
+.legend-swatch.circle{ border-radius:50%; }
+.legend-swatch.affected{ background:var(--text); }
+.legend-swatch.carrier{ background:linear-gradient(90deg,var(--text) 50%,transparent 50%); }
+
+/* MOBILE */
+
+@media(max-width:500px){
+    .app{ padding:10px; }
+    .card{ padding:15px; border-radius:17px; }
+    .brand h1{ font-size:21px; }
+    .grid{ grid-template-columns:1fr 1fr; }
+    .pair{ font-size:18px; }
+    th,td{ width:58px; height:52px; }
+    .maintab{ font-size:12px; padding:10px 5px; }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="brand">
+        <div class="logo">🧬</div>
+        <div>
+            <h1>GeneLab</h1>
+            <span>Genetics Analyzer</span>
+        </div>
+    </div>
+
+    <button class="dark-btn" onclick="toggleDark()" id="theme">🌙</button>
+
+</header>
+
+
+<!-- MAIN TABS -->
+
+<div class="maintabs">
+    <button class="maintab active" id="tab-cross" onclick="switchMain('cross')">🧪 ผสมพันธุ์</button>
+    <button class="maintab" id="tab-pedigree" onclick="switchMain('pedigree')">🌳 แผนภูมิสายพันธุ์</button>
+</div>
+
+
+<!-- ============ PANEL: CROSS ============ -->
+
+<div class="panel active" id="panel-cross">
+
+    <div class="card">
+
+        <div class="title">
+            <div class="number">1</div>
+            <h2>เลือกรูปแบบการวิเคราะห์</h2>
+        </div>
+
+        <div class="modeswitch">
+            <button class="mode-btn active" id="mode-mendel" onclick="switchMode('mendel')">🔤 เมนเดล (1-3 ยีน)</button>
+            <button class="mode-btn" id="mode-blood" onclick="switchMode('blood')">🩸 หมู่เลือด ABO</button>
+            <button class="mode-btn" id="mode-xlink" onclick="switchMode('xlink')">⚧ ยีนบนโครโมโซม X</button>
+        </div>
+
+        <!-- MENDEL INPUTS -->
+        <div id="inputs-mendel">
+
+            <div class="field">
+                <label>🧬 ตัวที่ 1 (พ่อ/แม่)</label>
+                <div class="input-box">
+                    <input type="text" id="parent1" placeholder="เช่น TtRrYy" oninput="preview()">
+                    <button class="clear" onclick="clearInput('parent1')">×</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>🧬 ตัวที่ 2 (พ่อ/แม่)</label>
+                <div class="input-box">
+                    <input type="text" id="parent2" placeholder="เช่น TtRrYy" oninput="preview()">
+                    <button class="clear" onclick="clearInput('parent2')">×</button>
+                </div>
+            </div>
+
+            <div class="examples">
+                <button class="example-chip" onclick="loadExample('Tt','Tt')">Tt × Tt</button>
+                <button class="example-chip" onclick="loadExample('TtRr','TtRr')">TtRr × TtRr</button>
+                <button class="example-chip" onclick="loadExample('TtRrYy','TtRrYy')">TtRrYy × TtRrYy</button>
+                <button class="example-chip" onclick="loadExample('Tt','tt')">Tt × tt (test cross)</button>
+            </div>
+
+            <div class="cross-preview" id="preview">
+                <small>การผสม</small>
+                <strong>— × —</strong>
+            </div>
+
+            <button class="analyze" onclick="analyze()">🔬 วิเคราะห์พันธุกรรม</button>
+
+        </div>
+
+        <!-- BLOOD TYPE INPUTS -->
+        <div id="inputs-blood" style="display:none">
+
+            <div class="info-box">
+                หมู่เลือดระบบ ABO ควบคุมด้วยยีน 3 อัลลีล: I<sup>A</sup> และ I<sup>B</sup> เด่นร่วมกัน (codominant) ส่วน i ด้อยกว่าทั้งคู่
+            </div>
+
+            <div class="field">
+                <label>🩸 พ่อ/แม่ คนที่ 1</label>
+                <select id="blood1">
+                    <option value="IAIA">I^A I^A (หมู่ A แท้)</option>
+                    <option value="IAi">I^A i (หมู่ A พาหะ)</option>
+                    <option value="IBIB">I^B I^B (หมู่ B แท้)</option>
+                    <option value="IBi">I^B i (หมู่ B พาหะ)</option>
+                    <option value="IAIB">I^A I^B (หมู่ AB)</option>
+                    <option value="ii">ii (หมู่ O)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>🩸 พ่อ/แม่ คนที่ 2</label>
+                <select id="blood2">
+                    <option value="IAIA">I^A I^A (หมู่ A แท้)</option>
+                    <option value="IAi" selected>I^A i (หมู่ A พาหะ)</option>
+                    <option value="IBIB">I^B I^B (หมู่ B แท้)</option>
+                    <option value="IBi">I^B i (หมู่ B พาหะ)</option>
+                    <option value="IAIB">I^A I^B (หมู่ AB)</option>
+                    <option value="ii">ii (หมู่ O)</option>
+                </select>
+            </div>
+
+            <button class="analyze" onclick="analyzeBlood()">🔬 วิเคราะห์หมู่เลือด</button>
+
+        </div>
+
+        <!-- X-LINKED INPUTS -->
+        <div id="inputs-xlink" style="display:none">
+
+            <div class="info-box">
+                ยีนบนโครโมโซม X เช่น ตาบอดสี ฮีโมฟีเลีย — ใช้ A = เด่น, a = ด้อย เพศชายมีโครโมโซมเดียว (X<sup>a</sup>Y) จึงแสดงลักษณะด้อยได้ง่ายกว่า
+            </div>
+
+            <div class="field">
+                <label>♀ แม่ (X X)</label>
+                <select id="xmother">
+                    <option value="XAXA">X^A X^A (ปกติแท้)</option>
+                    <option value="XAXa" selected>X^A X^a (พาหะ)</option>
+                    <option value="XaXa">X^a X^a (แสดงลักษณะด้อย)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>♂ พ่อ (X Y)</label>
+                <select id="xfather">
+                    <option value="XAY" selected>X^A Y (ปกติ)</option>
+                    <option value="XaY">X^a Y (แสดงลักษณะด้อย)</option>
+                </select>
+            </div>
+
+            <button class="analyze" onclick="analyzeXLink()">🔬 วิเคราะห์ลักษณะบนโครโมโซม X</button>
+
+        </div>
+
+        <div id="history">
+            <p style="font-weight:bold;font-size:13px;margin:16px 0 0;color:var(--muted)">📜 ประวัติการผสมล่าสุด</p>
+            <div class="history-wrap" id="history-list">
+                <span class="history-empty">ยังไม่มีประวัติ</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="output"></div>
+
+</div>
+
+
+<!-- ============ PANEL: PEDIGREE ============ -->
+
+<div class="panel" id="panel-pedigree">
+
+    <div class="card">
+
+        <div class="title">
+            <div class="number">🌳</div>
+            <h2>สร้างแผนภูมิสายพันธุ์ (Pedigree Chart)</h2>
+        </div>
+
+        <div class="ped-toolbar">
+            <button class="ped-btn" onclick="pedAddNode('M')">➕ ชาย ◻</button>
+            <button class="ped-btn" onclick="pedAddNode('F')">➕ หญิง ◯</button>
+            <button class="ped-btn" onclick="pedAddNode('U')">➕ ไม่ทราบเพศ ◇</button>
+            <button class="ped-btn" id="btn-connect" onclick="pedConnectSpouse()">💍 เชื่อมคู่สมรส</button>
+            <button class="ped-btn" id="btn-child" onclick="pedAddChild()">👶 เพิ่มลูก</button>
+            <button class="ped-btn" onclick="pedRename()">✏️ ตั้งชื่อ</button>
+            <button class="ped-btn" onclick="pedCycleStatus()">🎨 สลับสถานะ</button>
+            <button class="ped-btn danger" onclick="pedDelete()">🗑️ ลบที่เลือก</button>
+            <button class="ped-btn danger" onclick="pedClearAll()">♻️ ล้างทั้งหมด</button>
+        </div>
+
+        <div class="ped-canvas-wrap">
+            <svg id="pedsvg" width="1000" height="560" viewBox="0 0 1000 560"></svg>
+        </div>
+
+        <div class="ped-hint">
+            💡 วิธีใช้: แตะปุ่ม "➕" เพื่อเพิ่มคน แล้วลากจุดไปวางตำแหน่งที่ต้องการ &nbsp;•&nbsp;
+            แตะเลือกคน 2 คนแล้วกด "เชื่อมคู่สมรส" เพื่อสร้างเส้นคู่ &nbsp;•&nbsp;
+            เลือกคู่สมรส (แตะเส้น) หรือคนคนเดียว แล้วกด "เพิ่มลูก" &nbsp;•&nbsp;
+            แตะ 2 ครั้งที่คนเพื่อสลับสถานะ ปกติ / พาหะ / แสดงลักษณะ
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-swatch"></div> ชาย ปกติ</div>
+            <div class="legend-item"><div class="legend-swatch circle"></div> หญิง ปกติ</div>
+            <div class="legend-item"><div class="legend-swatch affected"></div> แสดงลักษณะ (affected)</div>
+            <div class="legend-item"><div class="legend-swatch carrier"></div> พาหะ (carrier)</div>
+            <div class="legend-item">━━ เส้นคู่สมรส &nbsp; │ เส้นสายเลือด</div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   MAIN TAB SWITCH
+===================================================== */
+
+function switchMain(name){
+
+    document.getElementById('panel-cross').classList.toggle('active',name==='cross');
+    document.getElementById('panel-pedigree').classList.toggle('active',name==='pedigree');
+
+    document.getElementById('tab-cross').classList.toggle('active',name==='cross');
+    document.getElementById('tab-pedigree').classList.toggle('active',name==='pedigree');
+
+}
+
+
+/* =====================================================
+   MODE SWITCH (mendel / blood / xlink)
+===================================================== */
+
+function switchMode(name){
+
+    ['mendel','blood','xlink'].forEach(m=>{
+
+        document.getElementById('mode-'+m).classList.toggle('active',m===name);
+        document.getElementById('inputs-'+m).style.display = (m===name)?'block':'none';
+
+    });
+
+    document.getElementById('output').innerHTML='';
+
+}
+
+
+/* =====================================================
+   UTILITY (Mendelian)
+===================================================== */
+
+function splitPairs(text){
+
+    let result=[];
+
+    for(let i=0;i<text.length;i+=2){
+        result.push(text.substring(i,i+2));
+    }
+
+    return result;
+}
+
+
+function gametes(pair){
+
+    if(pair.length===1) return [pair];
+    if(pair[0]===pair[1]) return [pair[0]];
+
+    return [pair[0],pair[1]];
+}
+
+
+function sortGene(g){
+
+    if(g.length!==2) return g;
+
+    let a=g[0];
+    let b=g[1];
+
+    if(a.toUpperCase()===b.toUpperCase()){
+        if(a===a.toLowerCase()) return b+a;
+    }
+
+    return g;
+}
+
+
+/* =====================================================
+   PUNNETT (generic, used by mendel + blood + xlink)
+===================================================== */
+
+function makePunnett(gaArr,gbArr,rowLabel,colLabel,sortFn){
+
+    sortFn = sortFn || sortGene;
+
+    let children=[];
+
+    let html=`<div class="table-container"><table><tr><th>×</th>`;
+
+    gbArr.forEach(x=>{ html+=`<th>${x}</th>`; });
+
+    html+=`</tr>`;
+
+    gaArr.forEach(x=>{
+
+        html+=`<tr><th>${x}</th>`;
+
+        gbArr.forEach(y=>{
+
+            let child=sortFn(x+y);
+            children.push(child);
+
+            html+=`<td>${child}</td>`;
+
+        });
+
+        html+=`</tr>`;
+
+    });
+
+    html+=`</table></div>`;
+
+    return { html, children };
+
+}
+
+
+/* =====================================================
+   GENOTYPE / PHENOTYPE SUMMARY
+===================================================== */
+
+function genotype(children){
+
+    let count={};
+
+    children.forEach(x=>{ count[x]=(count[x]||0)+1; });
+
+    let total=children.length;
+    let html="";
+
+    Object.keys(count).forEach(x=>{
+
+        let p=count[x]/total;
+
+        html+=`
+        <div class="genotype">
+            <b>${x}</b>
+            <small>${count[x]}/${total} · ${(p*100).toFixed(2)}%</small>
+        </div>
+        `;
+
+    });
+
+    return html;
+
+}
+
+
+function phenotype(children){
+
+    let dominant=0;
+    let recessive=0;
+
+    children.forEach(g=>{
+
+        if(g.length<2) return;
+
+        if(g[0]===g[0].toUpperCase() || g[1]===g[1].toUpperCase()){
+            dominant++;
+        }else{
+            recessive++;
+        }
+
+    });
+
+    let total=dominant+recessive;
+
+    if(total===0) return "";
+
+    return `
+    <div class="phenotype">
+        <div class="phenotype-row">
+            <span>ลักษณะเด่น</span>
+            <span class="percent">${dominant}/${total} · ${(dominant/total*100).toFixed(2)}%</span>
+        </div>
+        <div class="phenotype-row">
+            <span>ลักษณะด้อย</span>
+            <span>${recessive}/${total} · ${(recessive/total*100).toFixed(2)}%</span>
+        </div>
+    </div>
+    `;
+
+}
+
+
+/* =====================================================
+   HISTORY (in-memory)
+===================================================== */
+
+let crossHistory=[];
+
+function pushHistory(label,restoreFn){
+
+    crossHistory.unshift({label,restoreFn});
+
+    if(crossHistory.length>8) crossHistory.pop();
+
+    renderHistory();
+
+}
+
+function renderHistory(){
+
+    let el=document.getElementById('history-list');
+
+    if(crossHistory.length===0){
+        el.innerHTML=`<span class="history-empty">ยังไม่มีประวัติ</span>`;
+        return;
+    }
+
+    el.innerHTML='';
+
+    crossHistory.forEach((h,i)=>{
+
+        let btn=document.createElement('button');
+        btn.className='history-chip';
+        btn.textContent=h.label;
+        btn.onclick=()=>h.restoreFn();
+
+        el.appendChild(btn);
+
+    });
+
+}
+
+
+/* =====================================================
+   MENDELIAN ANALYZE
+===================================================== */
+
+function analyze(){
+
+    let p1=document.getElementById("parent1").value.replace(/\s/g,"");
+    let p2=document.getElementById("parent2").value.replace(/\s/g,"");
+
+    let output=document.getElementById("output");
+
+    if(!p1 || !p2){
+
+        output.innerHTML=`<div class="card"><div class="error">⚠️ กรุณาใส่ข้อมูลทั้งสองตัว</div></div>`;
+        return;
+
+    }
+
+    let pairs1=splitPairs(p1);
+    let pairs2=splitPairs(p2);
+
+    let html="";
+
+    html+=`
+    <div class="card">
+        <div class="title"><div class="number">2</div><h2>แยกคู่ยีน</h2></div>
+        <p><b>ตัวที่ 1</b></p>
+        <div class="pairs">
+    `;
+
+    pairs1.forEach(x=>{ html+=`<div class="pair">${x}</div>`; });
+
+    html+=`</div><p><b>ตัวที่ 2</b></p><div class="pairs">`;
+
+    pairs2.forEach(x=>{ html+=`<div class="pair">${x}</div>`; });
+
+    html+=`</div></div>`;
+
+    let max=Math.max(pairs1.length,pairs2.length);
+    let allChildrenSets=[];
+
+    for(let i=0;i<max;i++){
+
+        let a=pairs1[i];
+        let b=pairs2[i];
+
+        html+=`
+        <div class="card">
+            <div class="title"><div class="number">${i+1}</div><h2>ลักษณะที่ ${i+1}</h2></div>
+        `;
+
+        if(!a || !b){
+            html+=`<div class="error">⚠️ ข้อมูลคู่นี้ไม่ครบ</div></div>`;
+            continue;
+        }
+
+        let ga=gametes(a);
+        let gb=gametes(b);
+        let result=makePunnett(ga,gb);
+
+        allChildrenSets.push(result.children);
+
+        html+=`
+            <div class="cross"><span>${a}</span> × <span>${b}</span></div>
+            <h3>📊 Punnett Square</h3>
+            ${result.html}
+            <h3>🧬 Genotype</h3>
+            <div class="genotypes">${genotype(result.children)}</div>
+            <h3>👁️ Phenotype</h3>
+            ${phenotype(result.children)}
+        </div>
+        `;
+
+    }
+
+    html+=`
+    <div class="card">
+        <div class="title"><div class="number">∑</div><h2>วิธีคำนวณ</h2></div>
+        <p>ตัวอย่างการผสมแบบ <b>heterozygous</b></p>
+        <div class="formula">
+Tt × Tt
+
+     T     t
+  ┌─────┬─────┐
+T │ TT  │ Tt  │
+  ├─────┼─────┤
+t │ Tt  │ tt  │
+  └─────┴─────┘
+
+TT = 1/4
+Tt = 2/4
+tt = 1/4
+
+T_ = 3/4
+tt = 1/4
+        </div>
+    </div>
+    `;
+
+    if(pairs1.length>=2 && pairs2.length>=2 && allChildrenSets.length>=2){
+
+        let ratios = allChildrenSets.map(set=>{
+
+            let dom=set.filter(g=>{
+                if(g.length<2) return false;
+                return g[0]===g[0].toUpperCase() || g[1]===g[1].toUpperCase();
+            }).length;
+
+            return { dom, total:set.length, rec:set.length-dom };
+
+        });
+
+        let combinedProb = ratios.reduce((acc,r)=>acc*(r.dom/r.total),1);
+        let combinedFractionText = ratios.map(r=>`${r.dom}/${r.total}`).join(' × ');
+
+        let percent=(combinedProb*100).toFixed(2);
+
+        html+=`
+        <div class="card">
+            <div class="title"><div class="number">🎯</div><h2>คำนวณลักษณะเด่นทั้งหมดพร้อมกัน</h2></div>
+            <p>เมื่อต้องการหาความน่าจะเป็นของหลายลักษณะพร้อมกัน ให้คูณความน่าจะเป็นของแต่ละลักษณะ (กฎการคูณ)</p>
+            <div class="formula">${combinedFractionText}</div>
+            <div class="answer">
+                <small>ความน่าจะเป็นที่ลูกจะแสดงลักษณะเด่นทุกลักษณะ</small>
+                <strong>${percent}%</strong>
+                <small>≈ ${combinedProb.toFixed(4)}</small>
+            </div>
+        </div>
+        `;
+
+    }
+
+    output.innerHTML=html;
+
+    pushHistory(`${p1} × ${p2}`, ()=>{
+        document.getElementById('parent1').value=p1;
+        document.getElementById('parent2').value=p2;
+        preview();
+        analyze();
+        window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    window.scrollTo({ top:document.body.scrollHeight, behavior:"smooth" });
+
+}
+
+
+/* =====================================================
+   BLOOD TYPE (ABO, multiple alleles / codominance)
+===================================================== */
+
+function bloodPhenotype(g){
+
+    let has=(x)=>g.includes(x);
+
+    if(g==='ii') return 'O';
+
+    let a=has('IA');
+    let b=has('IB');
+
+    if(a&&b) return 'AB';
+    if(a) return 'A';
+    if(b) return 'B';
+
+    return '?';
+
+}
+
+function bloodAlleles(g){
+    // returns array of the two alleles as tokens: IA, IB, or i
+    if(g==='IAIA') return ['IA','IA'];
+    if(g==='IAi') return ['IA','i'];
+    if(g==='IBIB') return ['IB','IB'];
+    if(g==='IBi') return ['IB','i'];
+    if(g==='IAIB') return ['IA','IB'];
+    if(g==='ii') return ['i','i'];
+}
+
+function alleleLabel(a){
+    if(a==='IA') return 'I<tspan>A</tspan>';
+    return a;
+}
+
+function analyzeBlood(){
+
+    let g1=document.getElementById('blood1').value;
+    let g2=document.getElementById('blood2').value;
+
+    let al1=bloodAlleles(g1);
+    let al2=bloodAlleles(g2);
+
+    let uniq1=[...new Set(al1)];
+    let uniq2=[...new Set(al2)];
+
+    let children=[];
+    let rows=[];
+
+    uniq1.forEach(x=>{
+        uniq2.forEach(y=>{
+            let combo=[x,y].sort().join('');
+            children.push(combo);
+        });
+    });
+
+    let count={};
+    children.forEach(c=>{ count[c]=(count[c]||0)+1; });
+
+    let total=children.length;
+
+    let genoLabel=(c)=>{
+        if(c==='ii') return 'ii';
+        if(c==='IAi'||c==='iIA') return 'I^A i';
+        if(c==='IBi'||c==='iIB') return 'I^B i';
+        if(c==='IAIA') return 'I^A I^A';
+        if(c==='IBIB') return 'I^B I^B';
+        if(c==='IAIB'||c==='IBIA') return 'I^A I^B';
+        return c;
+    };
+
+    let phenoCount={A:0,B:0,AB:0,O:0};
+
+    Object.keys(count).forEach(c=>{
+
+        let alleles=c.match(/IA|IB|i/g);
+        let g = alleles.sort().join('');
+        let pheno = bloodPhenotype(g);
+
+        phenoCount[pheno]=(phenoCount[pheno]||0)+count[c];
+
+    });
+
+    let tableHtml=`<div class="table-container"><table><tr><th>×</th>`;
+    uniq2.forEach(y=>{ tableHtml+=`<th>${y==='i'?'i':y.replace('I','I^')}</th>`; });
+    tableHtml+=`</tr>`;
+
+    uniq1.forEach(x=>{
+        tableHtml+=`<tr><th>${x==='i'?'i':x.replace('I','I^')}</th>`;
+        uniq2.forEach(y=>{
+            let combo=[x,y].sort().join('');
+            tableHtml+=`<td>${genoLabel(combo)}</td>`;
+        });
+        tableHtml+=`</tr>`;
+    });
+
+    tableHtml+=`</table></div>`;
+
+    let genoHtml='';
+    Object.keys(count).forEach(c=>{
+        let p=count[c]/total;
+        genoHtml+=`<div class="genotype"><b>${genoLabel(c)}</b><small>${count[c]}/${total} · ${(p*100).toFixed(1)}%</small></div>`;
+    });
+
+    let phenoHtml='';
+    ['A','B','AB','O'].forEach(p=>{
+        if(phenoCount[p]>0){
+            phenoHtml+=`
+            <div class="phenotype-row">
+                <span>หมู่เลือด ${p}</span>
+                <span class="percent">${phenoCount[p]}/${total} · ${(phenoCount[p]/total*100).toFixed(1)}%</span>
+            </div>
+            `;
+        }
+    });
+
+    let html=`
+    <div class="card">
+        <div class="title"><div class="number">🩸</div><h2>ผลการผสมหมู่เลือด ABO</h2></div>
+        <div class="cross"><span>${genoLabel(g1.split('').every((c,i,a)=>true)?al1.sort().join(''):g1)}</span> × <span>${al2.sort().join('')}</span></div>
+        <h3>📊 Punnett Square</h3>
+        ${tableHtml}
+        <h3>🧬 Genotype ที่เป็นไปได้</h3>
+        <div class="genotypes">${genoHtml}</div>
+        <h3>👁️ หมู่เลือดของลูก (Phenotype)</h3>
+        <div class="phenotype">${phenoHtml}</div>
+    </div>
+    `;
+
+    document.getElementById('output').innerHTML=html;
+
+    pushHistory(`🩸 ${genoLabel(al1.sort().join(''))} × ${genoLabel(al2.sort().join(''))}`, ()=>{
+        document.getElementById('blood1').value=g1;
+        document.getElementById('blood2').value=g2;
+        analyzeBlood();
+        window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    window.scrollTo({ top:document.body.scrollHeight, behavior:"smooth" });
+
+}
+
+
+/* =====================================================
+   X-LINKED
+===================================================== */
+
+function analyzeXLink(){
+
+    let mom=document.getElementById('xmother').value; // e.g XAXa
+    let dad=document.getElementById('xfather').value; // e.g XAY
+
+    let momAlleles=[mom.substring(0,2),mom.substring(2,4)]; // ['XA','Xa']
+    let dadX = dad.substring(0,2); // XA or Xa
+
+    let momGametes = momAlleles; // XA, Xa (or same twice)
+    let dadGametes = [dadX,'Y'];
+
+    let children=[]; // {geno, sex}
+
+    momGametes.forEach(m=>{
+        dadGametes.forEach(d=>{
+            if(d==='Y'){
+                children.push({ geno:m+'Y', sex:'ชาย' });
+            }else{
+                let alleles=[m,d].sort();
+                children.push({ geno:alleles.join(''), sex:'หญิง' });
+            }
+        });
+    });
+
+    let tableHtml=`<div class="table-container"><table><tr><th>×</th>`;
+    dadGametes.forEach(d=>{ tableHtml+=`<th>${d}</th>`; });
+    tableHtml+=`</tr>`;
+
+    momGametes.forEach(m=>{
+        tableHtml+=`<tr><th>${m}</th>`;
+        dadGametes.forEach(d=>{
+            let label = d==='Y' ? m+'Y' : [m,d].sort().join('');
+            let isRecessive = label.includes('Xa') && !label.includes('XA');
+            tableHtml+=`<td class="${isRecessive?'affected':''}">${label}</td>`;
+        });
+        tableHtml+=`</tr>`;
+    });
+
+    tableHtml+=`</table></div>`;
+
+    let count={};
+    children.forEach(c=>{
+        let key=c.geno+' ('+c.sex+')';
+        count[key]=(count[key]||0)+1;
+    });
+
+    let total=children.length;
+
+    let genoHtml='';
+    Object.keys(count).forEach(k=>{
+        let p=count[k]/total;
+        genoHtml+=`<div class="genotype"><b>${k.split(' ')[0]}</b><small>${k.split(' ')[1]} · ${count[k]}/${total} · ${(p*100).toFixed(1)}%</small></div>`;
+    });
+
+    let affected = children.filter(c=>c.geno.includes('Xa') && !c.geno.includes('XA')).length;
+    let unaffected = total-affected;
+
+    let sonsAffected = children.filter(c=>c.sex==='ชาย' && c.geno.includes('Xa')).length;
+    let sonsTotal = children.filter(c=>c.sex==='ชาย').length;
+    let daughtersAffected = children.filter(c=>c.sex==='หญิง' && c.geno==='XaXa').length;
+    let daughtersTotal = children.filter(c=>c.sex==='หญิง').length;
+
+    let html=`
+    <div class="card">
+        <div class="title"><div class="number">⚧</div><h2>ผลการผสมยีนบนโครโมโซม X</h2></div>
+        <div class="cross"><span>${mom}</span> × <span>${dad}</span></div>
+        <h3>📊 Punnett Square</h3>
+        ${tableHtml}
+        <h3>🧬 Genotype ของลูก</h3>
+        <div class="genotypes">${genoHtml}</div>
+        <h3>👁️ สรุปลักษณะ</h3>
+        <div class="phenotype">
+            <div class="phenotype-row"><span>ลูกที่แสดงลักษณะด้อย</span><span class="percent">${affected}/${total} · ${(affected/total*100).toFixed(1)}%</span></div>
+            <div class="phenotype-row"><span>ลูกชายที่แสดงลักษณะด้อย</span><span>${sonsAffected}/${sonsTotal||1}</span></div>
+            <div class="phenotype-row"><span>ลูกสาวที่แสดงลักษณะด้อย</span><span>${daughtersAffected}/${daughtersTotal||1}</span></div>
+        </div>
+        <p class="ped-hint" style="margin-top:12px">💡 ลูกชายได้ X มาจากแม่เพียงชุดเดียว จึงมีโอกาสแสดงลักษณะด้อยจากพาหะของแม่ได้ง่ายกว่าลูกสาว</p>
+    </div>
+    `;
+
+    document.getElementById('output').innerHTML=html;
+
+    pushHistory(`⚧ ${mom} × ${dad}`, ()=>{
+        document.getElementById('xmother').value=mom;
+        document.getElementById('xfather').value=dad;
+        analyzeXLink();
+        window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    window.scrollTo({ top:document.body.scrollHeight, behavior:"smooth" });
+
+}
+
+
+/* =====================================================
+   PREVIEW / CLEAR / EXAMPLE (mendel)
+===================================================== */
+
+function preview(){
+
+    let a=document.getElementById("parent1").value || "—";
+    let b=document.getElementById("parent2").value || "—";
+
+    document.getElementById("preview").innerHTML=`
+        <small>การผสม</small>
+        <strong>${a} × ${b}</strong>
+    `;
+
+}
+
+function clearInput(id){
+    document.getElementById(id).value="";
+    preview();
+}
+
+function loadExample(a,b){
+    document.getElementById('parent1').value=a;
+    document.getElementById('parent2').value=b;
+    preview();
+}
+
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+function toggleDark(){
+
+    document.body.classList.toggle("dark");
+
+    let dark=document.body.classList.contains("dark");
+
+    document.getElementById("theme").textContent = dark ? "☀️" : "🌙";
+
+}
+
+
+/* =====================================================
+   ============  PEDIGREE CHART  =========================
+===================================================== */
+
+let pedNodes = [];      // {id, x, y, sex, status, label}
+let pedCouples = [];    // {id, a, b}
+let pedChildEdges = []; // {id, coupleId(optional), parentId(optional), child}
+let pedNextId = 1;
+
+let pedSelectedNodes = [];   // node ids
+let pedSelectedCouple = null; // couple id
+
+const NODE_R = 24; // half-size for square/circle
+
+function pedGetSvg(){ return document.getElementById('pedsvg'); }
+
+function pedAddNode(sex){
+
+    let id = 'n'+(pedNextId++);
+
+    let baseX = 100 + (pedNodes.length % 6) * 130;
+    let baseY = 90 + Math.floor(pedNodes.length / 6) * 140;
+
+    pedNodes.push({
+        id, x: baseX, y: baseY,
+        sex, status:'unaffected',
+        label: sex==='M' ? 'ชาย' : (sex==='F' ? 'หญิง' : 'ไม่ทราบ')
+    });
+
+    renderPedigree();
+
+}
+
+function pedFindNode(id){ return pedNodes.find(n=>n.id===id); }
+
+function pedToggleSelectNode(id){
+
+    let idx = pedSelectedNodes.indexOf(id);
+
+    if(idx>-1){
+        pedSelectedNodes.splice(idx,1);
+    }else{
+        pedSelectedNodes.push(id);
+        if(pedSelectedNodes.length>2) pedSelectedNodes.shift();
+    }
+
+    pedSelectedCouple = null;
+
+    renderPedigree();
+
+}
+
+function pedToggleSelectCouple(id){
+
+    pedSelectedCouple = (pedSelectedCouple===id) ? null : id;
+    pedSelectedNodes = [];
+
+    renderPedigree();
+
+}
+
+function pedConnectSpouse(){
+
+    if(pedSelectedNodes.length!==2){
+        alert('กรุณาเลือกคน 2 คนก่อน (แตะที่รูปคนทั้งสอง)');
+        return;
+    }
+
+    let [a,b] = pedSelectedNodes;
+
+    let exists = pedCouples.find(c => (c.a===a&&c.b===b)||(c.a===b&&c.b===a));
+
+    if(exists){
+        alert('ทั้งสองคนนี้เชื่อมกันอยู่แล้ว');
+        return;
+    }
+
+    // align them on the same y (average)
+    let na=pedFindNode(a), nb=pedFindNode(b);
+    let avgY = (na.y+nb.y)/2;
+    na.y = avgY; nb.y = avgY;
+
+    // make sure a is left of b
+    if(na.x>nb.x){ let t=a; a=b; b=t; }
+
+    let id='c'+(pedNextId++);
+    pedCouples.push({ id, a, b });
+
+    pedSelectedNodes=[];
+
+    renderPedigree();
+
+}
+
+function pedAddChild(){
+
+    let sex = prompt('เพศของลูก: พิมพ์ M (ชาย) / F (หญิง) / U (ไม่ทราบ)','M');
+
+    if(!sex) return;
+
+    sex = sex.trim().toUpperCase();
+    if(!['M','F','U'].includes(sex)) sex='U';
+
+    let id='n'+(pedNextId++);
+
+    if(pedSelectedCouple){
+
+        let couple = pedCouples.find(c=>c.id===pedSelectedCouple);
+        let na = pedFindNode(couple.a), nb = pedFindNode(couple.b);
+        let midX = (na.x+nb.x)/2;
+
+        // count existing children of this couple to spread them out
+        let existingKids = pedChildEdges.filter(e=>e.coupleId===couple.id).length;
+
+        let childX = midX + (existingKids - (existingKids>0?0:0)) * 90 - (existingKids*0);
+        childX = midX + existingKids*90 - (existingKids>0 ? (existingKids* -0) : 0);
+        childX = midX - (existingKids)*0; // placeholder, replaced below
+
+        childX = midX + (existingKids * 90) - 0;
+        // simpler: fan out symmetrically
+        childX = midX + (existingKids%2===0 ? existingKids/2*100 : -Math.ceil(existingKids/2)*100);
+
+        let childY = na.y + 140;
+
+        pedNodes.push({ id, x:childX, y:childY, sex, status:'unaffected', label: sex==='M'?'ชาย':(sex==='F'?'หญิง':'ไม่ทราบ') });
+        pedChildEdges.push({ id:'e'+(pedNextId++), coupleId: couple.id, child: id });
+
+    } else if(pedSelectedNodes.length===1){
+
+        let parent = pedFindNode(pedSelectedNodes[0]);
+        let existingKids = pedChildEdges.filter(e=>e.parentId===parent.id).length;
+
+        let childX = parent.x + existingKids*100;
+        let childY = parent.y + 140;
+
+        pedNodes.push({ id, x:childX, y:childY, sex, status:'unaffected', label: sex==='M'?'ชาย':(sex==='F'?'หญิง':'ไม่ทราบ') });
+        pedChildEdges.push({ id:'e'+(pedNextId++), parentId: parent.id, child: id });
+
+    } else {
+
+        alert('กรุณาเลือกคู่สมรส (แตะเส้นเชื่อม) หรือเลือกคนคนเดียวก่อนเพิ่มลูก');
+        return;
+
+    }
+
+    pedSelectedNodes=[];
+    pedSelectedCouple=null;
+
+    renderPedigree();
+
+}
+
+function pedRename(){
+
+    let target=null;
+
+    if(pedSelectedNodes.length===1) target = pedFindNode(pedSelectedNodes[0]);
+
+    if(!target){
+        alert('กรุณาเลือกคนคนเดียวก่อนตั้งชื่อ');
+        return;
+    }
+
+    let name = prompt('ใส่ชื่อ/รหัสประจำตัว', target.label);
+
+    if(name!==null && name.trim()!==''){
+        target.label = name.trim();
+        renderPedigree();
+    }
+
+}
+
+function pedCycleStatus(){
+
+    if(pedSelectedNodes.length===0){
+        alert('กรุณาเลือกคนก่อน แล้วกดปุ่มนี้เพื่อสลับสถานะ');
+        return;
+    }
+
+    let order=['unaffected','carrier','affected'];
+
+    pedSelectedNodes.forEach(id=>{
+        let n=pedFindNode(id);
+        let idx=order.indexOf(n.status);
+        n.status = order[(idx+1)%order.length];
+    });
+
+    renderPedigree();
+
+}
+
+function pedDelete(){
+
+    if(pedSelectedNodes.length===0 && !pedSelectedCouple){
+        alert('กรุณาเลือกสิ่งที่ต้องการลบก่อน');
+        return;
+    }
+
+    if(pedSelectedCouple){
+
+        pedChildEdges = pedChildEdges.filter(e=>e.coupleId!==pedSelectedCouple);
+        pedCouples = pedCouples.filter(c=>c.id!==pedSelectedCouple);
+        pedSelectedCouple=null;
+
+    }
+
+    pedSelectedNodes.forEach(id=>{
+
+        pedNodes = pedNodes.filter(n=>n.id!==id);
+
+        pedCouples.forEach(c=>{
+            if(c.a===id||c.b===id){
+                pedChildEdges = pedChildEdges.filter(e=>e.coupleId!==c.id);
+            }
+        });
+
+        pedCouples = pedCouples.filter(c=>c.a!==id && c.b!==id);
+        pedChildEdges = pedChildEdges.filter(e=>e.parentId!==id && e.child!==id);
+
+    });
+
+    pedSelectedNodes=[];
+
+    renderPedigree();
+
+}
+
+function pedClearAll(){
+
+    if(pedNodes.length===0) return;
+
+    if(!confirm('ล้างแผนภูมิทั้งหมด?')) return;
+
+    pedNodes=[]; pedCouples=[]; pedChildEdges=[];
+    pedSelectedNodes=[]; pedSelectedCouple=null;
+
+    renderPedigree();
+
+}
+
+
+/* ---------- rendering ---------- */
+
+function pedNodeColor(status){
+
+    if(status==='affected') return { fill:'var(--text)', pattern:false };
+    if(status==='carrier') return { fill:'url(#carrierPattern)', pattern:true };
+
+    return { fill:'var(--card)', pattern:false };
+
+}
+
+function renderPedigree(){
+
+    let svg = pedGetSvg();
+
+    // compute needed canvas size
+    let maxX = 300, maxY = 300;
+
+    pedNodes.forEach(n=>{
+        maxX = Math.max(maxX, n.x+150);
+        maxY = Math.max(maxY, n.y+150);
+    });
+
+    svg.setAttribute('width', maxX);
+    svg.setAttribute('height', maxY);
+    svg.setAttribute('viewBox', `0 0 ${maxX} ${maxY}`);
+
+    let parts=[];
+
+    parts.push(`
+    <defs>
+        <pattern id="carrierPattern" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <rect width="4" height="8" fill="var(--text)"></rect>
+            <rect x="4" width="4" height="8" fill="var(--card)"></rect>
+        </pattern>
+    </defs>
+    `);
+
+    // --- edges: couple lines ---
+    pedCouples.forEach(c=>{
+
+        let a=pedFindNode(c.a), b=pedFindNode(c.b);
+        if(!a||!b) return;
+
+        let selected = pedSelectedCouple===c.id;
+
+        parts.push(`
+        <line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"
+            stroke="${selected?'var(--blue)':'var(--text)'}" stroke-width="${selected?4:2.5}"
+            style="cursor:pointer"
+            onclick="pedToggleSelectCouple('${c.id}')"></line>
+        `);
+
+    });
+
+    // --- edges: children ---
+    pedCouples.forEach(c=>{
+
+        let kids = pedChildEdges.filter(e=>e.coupleId===c.id);
+        if(kids.length===0) return;
+
+        let a=pedFindNode(c.a), b=pedFindNode(c.b);
+        if(!a||!b) return;
+
+        let midX=(a.x+b.x)/2, midY=(a.y+b.y)/2;
+        let busY = midY + 55;
+
+        parts.push(`<line x1="${midX}" y1="${midY}" x2="${midX}" y2="${busY}" stroke="var(--text)" stroke-width="2"></line>`);
+
+        let xs = kids.map(k=>{ let cn=pedFindNode(k.child); return cn?cn.x:midX; });
+        let minX=Math.min(midX,...xs), maxXX=Math.max(midX,...xs);
+
+        if(kids.length>1){
+            parts.push(`<line x1="${minX}" y1="${busY}" x2="${maxXX}" y2="${busY}" stroke="var(--text)" stroke-width="2"></line>`);
+        }
+
+        kids.forEach(k=>{
+            let cn=pedFindNode(k.child);
+            if(!cn) return;
+            parts.push(`<line x1="${cn.x}" y1="${busY}" x2="${cn.x}" y2="${cn.y-NODE_R}" stroke="var(--text)" stroke-width="2"></line>`);
+        });
+
+    });
+
+    // --- single-parent children ---
+    pedChildEdges.filter(e=>e.parentId).forEach(e=>{
+
+        let p=pedFindNode(e.parentId), cn=pedFindNode(e.child);
+        if(!p||!cn) return;
+
+        let busY = p.y + 55;
+
+        parts.push(`<line x1="${p.x}" y1="${p.y}" x2="${p.x}" y2="${busY}" stroke="var(--text)" stroke-width="2" stroke-dasharray="4,3"></line>`);
+        parts.push(`<line x1="${p.x}" y1="${busY}" x2="${cn.x}" y2="${busY}" stroke="var(--text)" stroke-width="2" stroke-dasharray="4,3"></line>`);
+        parts.push(`<line x1="${cn.x}" y1="${busY}" x2="${cn.x}" y2="${cn.y-NODE_R}" stroke="var(--text)" stroke-width="2" stroke-dasharray="4,3"></line>`);
+
+    });
+
+    // --- nodes ---
+    pedNodes.forEach(n=>{
+
+        let selected = pedSelectedNodes.includes(n.id);
+        let fill = n.status==='affected' ? 'var(--text)' : (n.status==='carrier' ? 'url(#carrierPattern)' : 'var(--card)');
+        let stroke = selected ? 'var(--blue)' : 'var(--text)';
+        let strokeW = selected ? 4 : 2.5;
+
+        let shape='';
+
+        if(n.sex==='M'){
+            shape = `<rect x="${n.x-NODE_R}" y="${n.y-NODE_R}" width="${NODE_R*2}" height="${NODE_R*2}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}"></rect>`;
+        }else if(n.sex==='F'){
+            shape = `<circle cx="${n.x}" cy="${n.y}" r="${NODE_R}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}"></circle>`;
+        }else{
+            let r=NODE_R*1.05;
+            shape = `<polygon points="${n.x},${n.y-r} ${n.x+r},${n.y} ${n.x},${n.y+r} ${n.x-r},${n.y}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}"></polygon>`;
+        }
+
+        parts.push(`
+        <g class="ped-node" data-id="${n.id}" style="cursor:grab">
+            ${shape}
+            <text x="${n.x}" y="${n.y+NODE_R+16}" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="Arial">${escapeXml(n.label)}</text>
+        </g>
+        `);
+
+    });
+
+    svg.innerHTML = parts.join('');
+
+    attachDrag(svg);
+
+    // toolbar active states
+    document.getElementById('btn-connect').classList.toggle('on', pedSelectedNodes.length===2);
+    document.getElementById('btn-child').classList.toggle('on', !!pedSelectedCouple || pedSelectedNodes.length===1);
+
+}
+
+function escapeXml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+
+/* ---------- drag + click handling ---------- */
+
+let dragState = null;
+
+function attachDrag(svg){
+
+    let groups = svg.querySelectorAll('.ped-node');
+
+    groups.forEach(g=>{
+
+        let id = g.getAttribute('data-id');
+
+        g.addEventListener('pointerdown', (ev)=>{
+
+            ev.stopPropagation();
+
+            let pt = getSvgPoint(svg, ev);
+            let node = pedFindNode(id);
+
+            dragState = {
+                id,
+                startX: pt.x, startY: pt.y,
+                origX: node.x, origY: node.y,
+                moved:false
+            };
+
+            g.setPointerCapture(ev.pointerId);
+
+        });
+
+        g.addEventListener('pointermove', (ev)=>{
+
+            if(!dragState || dragState.id!==id) return;
+
+            let pt = getSvgPoint(svg, ev);
+
+            let dx = pt.x - dragState.startX;
+            let dy = pt.y - dragState.startY;
+
+            if(Math.abs(dx)>3 || Math.abs(dy)>3) dragState.moved=true;
+
+            if(dragState.moved){
+
+                let node = pedFindNode(id);
+                node.x = Math.max(30, dragState.origX + dx);
+                node.y = Math.max(30, dragState.origY + dy);
+
+                renderPedigreeLight();
+
+            }
+
+        });
+
+        g.addEventListener('pointerup', (ev)=>{
+
+            if(!dragState || dragState.id!==id) return;
+
+            let wasClick = !dragState.moved;
+
+            dragState=null;
+
+            if(wasClick){
+                pedToggleSelectNode(id);
+            } else {
+                renderPedigree();
+            }
+
+        });
+
+    });
+
+}
+
+let lastClickTime={};
+
+function getSvgPoint(svg, evt){
+
+    let rect = svg.getBoundingClientRect();
+    let scaleX = svg.viewBox.baseVal.width / rect.width;
+    let scaleY = svg.viewBox.baseVal.height / rect.height;
+
+    return {
+        x: (evt.clientX - rect.left) * scaleX,
+        y: (evt.clientY - rect.top) * scaleY
+    };
+
+}
+
+// lightweight re-render during drag (skip event re-binding cost isn't huge here, reuse renderPedigree)
+function renderPedigreeLight(){
+    renderPedigree();
+}
+
+// double-click / double-tap to cycle status
+document.addEventListener('DOMContentLoaded', ()=>{
+
+    let svg = pedGetSvg();
+
+    svg.addEventListener('pointerdown', (ev)=>{
+
+        let g = ev.target.closest('.ped-node');
+        if(!g) return;
+
+        let id = g.getAttribute('data-id');
+        let now = Date.now();
+
+        if(lastClickTime[id] && now-lastClickTime[id] < 350){
+
+            let n = pedFindNode(id);
+            let order=['unaffected','carrier','affected'];
+            let idx=order.indexOf(n.status);
+            n.status = order[(idx+1)%order.length];
+
+            renderPedigree();
+
+            lastClickTime[id]=0;
+
+        } else {
+
+            lastClickTime[id]=now;
+
+        }
+
+    });
+
+    renderPedigree();
+
+});
+
+</script>
+
+</body>
+</html>
